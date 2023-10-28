@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks Condition="$(OVERRIDEFRAMEWORK) == ''">net7.0;net8.0</TargetFrameworks>
+        <TargetFramework Condition="$(OVERRIDEFRAMEWORK) != ''">net$([System.Environment]::Version.Major).$([System.Environment]::Version.Minor)</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <Title>ApiRoutes</Title>
+        <PackageId>ApiRoutes</PackageId>
+        <Authors>Flipper</Authors>
+        <PackageDescription>An alternative to Minimal Api. Uses CQRS pattern and Source Generator to improve developer experience</PackageDescription>
+        <RepositoryUrl>https://github.com/flipper-codes/ApiRoutes</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
+        <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        
+        <PackageReference Include="FluentValidation" Version="11.*" />
+
+        <ProjectReference Include="..\ApiRoutes.Utilities\ApiRoutes.Utilities.csproj" PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Teronis.MSBuild.Packaging.ProjectBuildInPackage" Version="1.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2023.2.0-eap3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\ApiRoutes.Generator\bin\$(Configuration)\netstandard2.0\ApiRoutes.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+    
+</Project>

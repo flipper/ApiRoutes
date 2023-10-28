@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <Title>ApiRoutes.Swagger</Title>
+        <PackageId>ApiRoutes.Swagger</PackageId>
+        <Authors>Flipper</Authors>
+        <PackageDescription>Provides support for Swashbuckle.AspNetCore when using ApiRoutes</PackageDescription>
+        <RepositoryUrl>https://github.com/flipper-codes/ApiRoutes</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath=""/>
+        <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ApiRoutes.Utilities\ApiRoutes.Utilities.csproj" PrivateAssets="All" />
+      <ProjectReference Include="..\ApiRoutes\ApiRoutes.csproj" ExactVersion="true" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Teronis.MSBuild.Packaging.ProjectBuildInPackage" Version="1.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <Target Name="UseExplicitPackageVersions" BeforeTargets="GenerateNuspec">
+        <ItemGroup>
+            <_ProjectReferenceWithExplicitPackageVersion Include="@(ProjectReference->'%(FullPath)')" Condition="'%(ProjectReference.PackageVersion)' != ''" />
+            <_ProjectReferenceWithExactPackageVersion Include="@(ProjectReference->'%(FullPath)')" Condition="'%(ProjectReference.ExactVersion)' == 'true'" />
+            <_ProjectReferenceWithReassignedVersion Include="@(_ProjectReferencesWithVersions)" Condition="'%(Identity)' != '' And '@(_ProjectReferenceWithExplicitPackageVersion)' == '@(_ProjectReferencesWithVersions)'">
+                <ProjectVersion>@(_ProjectReferenceWithExplicitPackageVersion->'%(PackageVersion)')</ProjectVersion>
+            </_ProjectReferenceWithReassignedVersion>
+            <_ProjectReferenceWithReassignedVersion Include="@(_ProjectReferencesWithVersions)" Condition="'%(Identity)' != '' And '@(_ProjectReferenceWithExactPackageVersion)' == '@(_ProjectReferencesWithVersions)'">
+                <ProjectVersion>[@(_ProjectReferencesWithVersions->'%(ProjectVersion)')]</ProjectVersion>
+            </_ProjectReferenceWithReassignedVersion>
+            <_ProjectReferencesWithVersions Remove="@(_ProjectReferenceWithReassignedVersion)" />
+            <_ProjectReferencesWithVersions Include="@(_ProjectReferenceWithReassignedVersion)" />
+        </ItemGroup>
+    </Target>
+</Project>

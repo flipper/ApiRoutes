@@ -1,0 +1,52 @@
+on:
+  push:
+    branches:
+    - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: | 
+            7.0.x
+            8.0.x
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: version
+        uses: gittools/actions/gitversion/execute@v0
+        with:
+          useConfigFile: true
+      - name: Add NuGet source
+        run: dotnet nuget add source --username ${{ github.repository_owner }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+      - name: Build Source Generator
+        run: dotnet build -c Release ./src/ApiRoutes.Generator
+      - name: Pack
+        run: dotnet pack -c Release -p:VERSION=${{ steps.version.outputs.nuGetVersion }} -o output ApiRoutes.sln
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          path: |
+            output
+  publish:
+    if: ${{ !github.event.act }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download NuGet artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: nuget
+      - name: Publish to Github Packages
+        run: dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+      - name: Publish to nuget.org
+        run: dotnet nuget push "*.nupkg" --skip-duplicate --api-key ${{ secrets.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"

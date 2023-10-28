@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.Build.Traversal">
+  <ItemGroup>
+    <ProjectReference Include="src/**/*.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(RUN_TESTS) != ''">
+    <ProjectReference Include="tests/**/*.csproj" />
+    <ProjectReference Remove="src/ApiRoutes.Swagger/ApiRoutes.Swagger.csproj" />
+    <ProjectReference Remove="src/ApiRoutes.EFCore/ApiRoutes.EFCore.csproj" />
+  </ItemGroup>
+</Project>
