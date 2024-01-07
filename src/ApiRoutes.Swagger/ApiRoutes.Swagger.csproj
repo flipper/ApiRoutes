@@ -9,7 +9,7 @@
         <PackageId>ApiRoutes.Swagger</PackageId>
         <Authors>Flipper</Authors>
         <PackageDescription>Provides support for Swashbuckle.AspNetCore when using ApiRoutes</PackageDescription>
-        <RepositoryUrl>https://github.com/flipper-codes/ApiRoutes</RepositoryUrl>
+        <RepositoryUrl>https://github.com/flipper/ApiRoutes</RepositoryUrl>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>

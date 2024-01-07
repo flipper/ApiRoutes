@@ -11,7 +11,7 @@
         <PackageId>ApiRoutes</PackageId>
         <Authors>Flipper</Authors>
         <PackageDescription>An alternative to Minimal Api. Uses CQRS pattern and Source Generator to improve developer experience</PackageDescription>
-        <RepositoryUrl>https://github.com/flipper-codes/ApiRoutes</RepositoryUrl>
+        <RepositoryUrl>https://github.com/flipper/ApiRoutes</RepositoryUrl>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
